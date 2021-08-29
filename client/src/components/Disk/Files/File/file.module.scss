@@ -1,0 +1,182 @@
+$mainColor: #0066ff;
+$secondColor: #cacaca;
+
+.file{
+    position: relative;
+    display: grid;
+    grid-template-columns: 0.4fr 0.5fr 3fr repeat(5, 1fr);
+    grid-template-areas: "opt logo name name name date space size";
+    margin-bottom: 15px;
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 0 5px rgba($color: #000000, $alpha: 0.1);
+    transition: background-color 0.1s ease-in-out;
+    cursor: pointer;
+    &:hover{
+        background-color: $mainColor;
+    }
+    &__opt{
+        grid-area: opt;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        &:hover{
+            .file__options{
+                background-color: #ffffff;
+                &::before{
+                    background-color: #ffffff;
+                }
+                &::after{
+                    background-color: #ffffff;
+                }
+            }
+        }
+    }
+    &__options{
+        background-color: $secondColor;
+        width: 5px;
+        height: 5px;
+        border-radius: 5px;
+        transition: background-color 0.1s ease-in-out;
+        &::before{
+            transition: background-color 0.1s ease-in-out;
+            position: absolute;
+            content: '';
+            background-color: $secondColor;
+            width: 5px;
+            height: 5px;
+            border-radius: 5px;
+            margin-top: -8px;
+        }
+        &::after{
+            transition: background-color 0.1s ease-in-out;
+            position: absolute;
+            content: '';
+            background-color: $secondColor;
+            width: 5px;
+            height: 5px;
+            border-radius: 5px;
+            margin-top: 8px;
+        }
+    }
+    &__logo{
+        grid-area: logo;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        img{
+            height: 50px;
+        }
+    }
+    &__name,
+    &__date,
+    &__size{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    &__name{
+        grid-area: name;
+    }
+    &__date{
+        grid-area: date;
+    }
+    &__size{
+        grid-area: size;
+    }
+    &__btn{
+        &__download,
+        &__rename{
+            display: flex;
+            padding: 4px 12px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba($color: #000000, $alpha: 0.1);
+            transition: background-color 0.1s ease-in-out;
+            cursor: pointer;
+            background-color: $secondColor;
+            &:hover{
+                background-color: #ffffff;
+            }
+        }
+        &__delete{
+            display: flex;
+            padding: 4px 12px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba($color: #000000, $alpha: 0.1);
+            transition: background-color 0.1s ease-in-out;
+            cursor: pointer;
+            background-color: $secondColor;
+            &:hover{
+                background-color: #ff0000;
+            }
+        }
+    }
+}
+
+.uploadFile{
+    overflow: hidden;
+    position: relative;
+    overflow: hidden;
+    display: grid;
+    grid-template-columns: 0.4fr 0.5fr 3fr repeat(5, 1fr);
+    grid-template-areas: "opt logo name name name date space size";
+    margin-bottom: 15px;
+    background-color: $secondColor;
+    border-radius: 10px;
+    box-shadow: 0 0 5px rgba($color: #000000, $alpha: 0.1);
+    &__progress{
+        position: absolute;
+        height: 100%;
+        background-color: #00a800;
+        width: 0;
+        z-index: 1;
+    }
+    &__logo{
+        z-index: 2;
+        grid-area: logo;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        img{
+            height: 50px;
+        }
+    }
+    &__name,
+    &__date,
+    &__size{
+        z-index: 2;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    &__name{
+        grid-area: name;
+    }
+    &__date{
+        grid-area: date;
+    }
+    &__size{
+        grid-area: size;
+    }
+}
+
+@media (max-width: 580px) {
+    .file,
+    .uploadFile{
+        grid-template-columns: 0.4fr 0.5fr 2fr repeat(5, 1fr);
+        grid-template-areas: "opt logo name name date space size";
+        word-break: break-all;
+        &__date{
+            width: 44px;
+            height: 70px;
+        }
+        &__size{
+            width: 35px;
+            height: 70px;
+        }
+    }
+}
