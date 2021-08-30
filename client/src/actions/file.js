@@ -65,7 +65,7 @@ export const useFile = () => {
                     if(message)
                         alert(message);
                     else{
-                        dispatch(addFile(response.file));
+                        dispatch(addFile({...response.file, currentDir: dirId}));
                         dispatch(changeUsedSpace(response.user.usedSpace));
                     }
                     files.shift();

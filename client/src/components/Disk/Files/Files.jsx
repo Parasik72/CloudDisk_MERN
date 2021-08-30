@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useFile } from '../../../actions/file';
-import { addUploadFile, setCurrrentDir, setSortBy, setSortDirection } from '../../../reducers/fileReducer';
+import { addUploadFile, setCurrrentDir, setSearch, setSortBy, setSortDirection } from '../../../reducers/fileReducer';
 import { File } from './File/File';
 import { UploadFile } from './File/UploadFile';
 import EmptyFolder from '../../../assets/img/EmptyFolder.png';
@@ -20,7 +20,16 @@ export const Files = () => {
     const dispatch = useDispatch();
     const showSort = !searchValue.length && files.length ? true : false;
     const backHandler = () => {
-        dispatch(setCurrrentDir(dirStack.pop()));
+        if(searchValue.length){
+            dispatch(setSearch(''));
+            const currentDirTemp = currentDir;
+            dispatch(setCurrrentDir('search'));
+            setTimeout(()=>{
+                dispatch(setCurrrentDir(currentDirTemp));
+            },1);
+        }
+        else
+            dispatch(setCurrrentDir(dirStack.pop()));
     }
     const dragHandler = (flag) => {
         return e => {
@@ -43,7 +52,7 @@ export const Files = () => {
         e.preventDefault();
         const uploadFilesArr = [];
         for (const iterator of e.dataTransfer.files) {
-            const upFile = { _id: Date.now() + Math.random(), date: Date.now(), name: iterator.name, size: iterator.size, progress: 0 };
+            const upFile = { _id: Date.now() + Math.random(), date: Date.now(), name: iterator.name, size: iterator.size, progress: 0, currentDir };
             dispatch(addUploadFile(upFile));
             uploadFilesArr.push(upFile);
         }
@@ -67,7 +76,7 @@ export const Files = () => {
         <div className={styles.files} onDragEnter={dragHandler(true)} onDragLeave={dragHandler(false)} onDragOver={dragHandler(true)}>
             <div className={styles.files__header}>
                 <div className={styles.files__back} 
-                    style={{display: dirStack?.length ? 'flex' : 'none'}}
+                    style={{display: dirStack?.length || searchValue.length ? 'flex' : 'none'}}
                     onClick={()=>backHandler()}
                 >
                     🠔 Back
@@ -83,7 +92,7 @@ export const Files = () => {
                 </div>
             }
             {files?.map(file => <File key={file._id} file={file}/>)}
-            {uploadFile?.map(file => <UploadFile key={file._id} file={file}/>)}
+            {uploadFile?.map(file => file.currentDir === currentDir && <UploadFile key={file._id} file={file}/>)}
         </div>
     );
 }

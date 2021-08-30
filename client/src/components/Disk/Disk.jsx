@@ -17,7 +17,8 @@ export const Disk = () => {
     const dispatch = useDispatch();
     useEffect(()=> {
         dispatch(showSearch());
-        dispatch(getFiles(currentDir, sortBy, sortDirection));
+        if(currentDir !== 'search')
+            dispatch(getFiles(currentDir, sortBy, sortDirection));
     },[dispatch, getFiles, currentDir, sortBy, sortDirection]);
     const uploadHandler = e => {
         if(e.target?.files?.length){
