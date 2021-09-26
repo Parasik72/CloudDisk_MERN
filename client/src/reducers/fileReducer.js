@@ -139,8 +139,7 @@ export const fileReducer = (state = defaultState, action) => {
                 ...state,
                 currentDir: null,
                 popUpDisplay: false,
-                dirStack: [],
-                searchValue: ''
+                dirStack: []
             }
         default:
             return state;

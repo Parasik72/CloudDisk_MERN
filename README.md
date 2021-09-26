@@ -1,6 +1,6 @@
 Cloud disk
 
-Version: 1.0.1.
+Version: 1.0.2.
 
 Full-stack MERN project.
 

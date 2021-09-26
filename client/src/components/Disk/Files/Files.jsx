@@ -18,7 +18,7 @@ export const Files = () => {
     const uploadFile = useSelector(state => state.files.uploadFile);
     const dirStack = useSelector(state => state.files.dirStack);
     const dispatch = useDispatch();
-    const showSort = !searchValue.length && files.length ? true : false;
+    const showSort = searchValue !== null && !searchValue.length && files.length ? true : false;
     const backHandler = () => {
         if(searchValue.length){
             dispatch(setSearch(''));
@@ -35,7 +35,7 @@ export const Files = () => {
         return e => {
             let bflag = true;
             for (const item of e.dataTransfer.items) {
-                if(item.kind !== 'file' || !item.type.length){
+                if(item.kind !== 'file'){
                     bflag = false;
                     break;
                 }

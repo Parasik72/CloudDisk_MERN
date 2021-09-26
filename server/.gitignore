@@ -2,3 +2,4 @@ node_modules
 static
 files
 config/default.json
+tempFiles

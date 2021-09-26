@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useFile } from '../../actions/file';
 import { showSearch } from '../../reducers/appReducer';
-import { addUploadFile, showPopUp } from '../../reducers/fileReducer';
+import { addUploadFile, clearSearch, showPopUp } from '../../reducers/fileReducer';
 import styles from './disk.module.scss';
 import { Files } from './Files/Files';
 import { Loader } from './Loader/Loader';
@@ -16,6 +16,7 @@ export const Disk = () => {
     const {getFiles, upload} = useFile();
     const dispatch = useDispatch();
     useEffect(()=> {
+        dispatch(clearSearch());
         dispatch(showSearch());
         if(currentDir !== 'search')
             dispatch(getFiles(currentDir, sortBy, sortDirection));

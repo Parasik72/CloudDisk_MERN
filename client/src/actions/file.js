@@ -2,7 +2,7 @@ import { useCallback } from "react"
 import { useHttp } from "../hooks/http.hooks"
 import { setLoadingOff, setLoadingOn } from "../reducers/appReducer";
 import { addFile, changeUploadFile, deleteFileAction, deleteUploadFile, renameFileAction, setDisableDelete, setFiles } from "../reducers/fileReducer";
-import { changeUsedSpace } from "../reducers/userReducer";
+import { changeUsedSpace,logoutUser } from "../reducers/userReducer";
 
 export const useFile = () => {
     const {request} = useHttp()
@@ -15,8 +15,12 @@ export const useFile = () => {
                     response= await request(`/api/file/?dirId=${dirId}&sort=${sortBy}&direction=${sortDirection}`, 'GET', null, {Authorization: `Bearer ${localStorage.getItem('token')}`});
                 else
                     response= await request(`/api/file/?sort=${sortBy}&direction=${sortDirection}`, 'GET', null, {Authorization: `Bearer ${localStorage.getItem('token')}`});
+                if(response instanceof Error)
+                    throw new Error(response);
                 dispatch(setFiles(response.files));
             } catch (error) {
+                localStorage.removeItem('token');
+                dispatch(logoutUser());
                 console.log(error);
             } finally{
                 dispatch(setLoadingOff());
@@ -43,6 +47,11 @@ export const useFile = () => {
     const upload = (files, dirId, uploadFiles) => {
         return async dispatch => {
             try {
+                const listener = e => {  
+                    e.preventDefault();
+                    return e.returnValue = 'close?';
+                };
+                window.addEventListener("beforeunload", listener);
                 const formData = new FormData();
                 formData.append('file', files[0]);
                 if(dirId)
@@ -73,7 +82,15 @@ export const useFile = () => {
                         uploadFiles.shift();
                     if(files.length)
                         dispatch(upload(files, dirId, uploadFiles));
+                    window.removeEventListener("beforeunload", listener);
                     };
+                xhr.onerror = err => {
+                    while(uploadFiles.length){
+                        dispatch(deleteUploadFile(uploadFiles[0]._id));
+                        uploadFiles.shift();
+                    }
+                    window.removeEventListener("beforeunload", listener);
+                }
             } catch (error) {
             }
         }

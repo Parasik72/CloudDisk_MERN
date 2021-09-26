@@ -9,7 +9,10 @@ const app = express();
 
 const PORT = config.get('PORT') || 5000;
 
-app.use(fileupload({}));
+app.use(fileupload({
+    useTempFiles: true,
+    tempFileDir: config.get("tempFilePath")
+}));
 app.use(express.json());
 app.use(express.static(path.join('./', 'static')));
 app.use('/api/auth', routes.auth);

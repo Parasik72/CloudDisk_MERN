@@ -2,6 +2,7 @@ $mainColor: #0066ff;
 $secondColor: #cacaca;
 
 .profileMenu{
+    overflow: hidden;
     position: absolute;
     width: 150px;
     background-color: #ffffff;
@@ -26,9 +27,6 @@ $secondColor: #cacaca;
         transition: background-color 0.1s ease-in-out;
         &:hover{
             background-color: $secondColor;
-        }
-        &:last-of-type{
-            border-radius: 0 0 5px 5px;
         }
     }
 }

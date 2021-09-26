@@ -3,5 +3,6 @@
     "Mongo_Uri": "",
     "jwtSecret": "",
     "filesPath": "",
-    "staticPath": ""
+    "staticPath": "",
+    "tempFilePath": ""
 }
