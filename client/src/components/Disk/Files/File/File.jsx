@@ -10,8 +10,10 @@ import { hideProfileMenu } from '../../../../reducers/appReducer';
 import { clearSearch, pushDirStack, setCurrrentDir } from '../../../../reducers/fileReducer';
 import styles from './file.module.scss';
 import { PopUpRename } from './PopUpRename/PopUpRename';
+import { useFileInfo } from '../../../../hooks/fileInfo.hooks';
 
 export const File = ({file}) => {
+    const {fileSize, minimizationNameLength} = useFileInfo();
     const {deleteFile, downloadFile} = useFile();
     const [optionDisplay, setOptionDisplay] = useState(false);
     const [popUpDisplay, setPopUpDisplay] = useState(false);
@@ -24,19 +26,6 @@ export const File = ({file}) => {
             dispatch(setCurrrentDir(file._id));
             dispatch(clearSearch());
         }
-    }
-    function fileSize(size) {
-        if(size === 0)
-            return '0 B'
-        var i = Math.floor( Math.log(size) / Math.log(1024) );
-        return ( size / Math.pow(1024, i) ).toFixed(2) * 1 + ' ' + ['B', 'kB', 'MB', 'GB', 'TB'][i];
-    };
-    const checkName = name => {
-        if(name.length >= 30){
-            const left = name.slice(0, 13), right = name.slice(-13);
-            return left + '...' + right;
-        }
-        return name;
     }
     const optHandler = e => {
         e.stopPropagation();
@@ -61,7 +50,7 @@ export const File = ({file}) => {
         <div className={styles.file} onClick={() => clickHandler()}>
             <div className={styles.file__opt} onClick={optHandler}><div className={styles.file__options}></div></div>
             <div className={styles.file__logo}><img src={file.type === 'dir' ? FolderLogo : FileLogo} alt="FILELOGO" /></div>
-            <div title={file.name} className={styles.file__name}>{checkName(file.name)}</div>
+            <div title={file.name} className={styles.file__name}>{minimizationNameLength(file.name, 30)}</div>
             <div className={styles.file__date}>{!optionDisplay ? new Date(file.date).toLocaleDateString() : file.type !== 'dir' ? <button className={styles.file__btn__download} onClick={downloadHandler}><img width={20} height={20} src={DownloadLogo} alt="DownloadLogo" /></button> : <button className={styles.file__btn__rename} onClick={renameHandler}><img width={20} height={20} src={ChangeLogo} alt="ChangeLogo" /></button>}</div>
             <div className={styles.file__size}>{!optionDisplay ? fileSize(file.size) : <button disabled={disableDelete} className={styles.file__btn__delete} onClick={deleteHandler}><img width={20} height={20} src={DeleteLogo} alt="DeleteLogo" /></button>}</div>
         </div>

@@ -25,7 +25,7 @@ export const Disk = () => {
         if(e.target?.files?.length){
             const uploadFilesArr = [];
             for (const iterator of e.target.files) {
-                const upFile = { _id: Date.now() + Math.random(), date: Date.now(), name: iterator.name, size: iterator.size, progress: 0 };
+                const upFile = { _id: Date.now() + Math.random(), date: Date.now(), name: iterator.name, size: iterator.size, progress: 0, currentDir };
                 dispatch(addUploadFile(upFile));
                 uploadFilesArr.push(upFile);
             }

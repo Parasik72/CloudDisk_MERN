@@ -83,7 +83,7 @@ export const useFile = () => {
                     if(files.length)
                         dispatch(upload(files, dirId, uploadFiles));
                     window.removeEventListener("beforeunload", listener);
-                    };
+                };
                 xhr.onerror = err => {
                     while(uploadFiles.length){
                         dispatch(deleteUploadFile(uploadFiles[0]._id));

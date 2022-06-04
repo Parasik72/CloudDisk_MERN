@@ -30,6 +30,25 @@ const recursiveDir = (dir, name) => {
     });
 }
 
+const transferToNewDir = async (file, name, user) => {
+    fs.mkdirSync(file.path + "\\" + name, {recursive: true}, e => console.log(e));
+    recursiveDir(file.path + '\\' + file.name, file.path + '\\' + name);
+    fs.rmdirSync(file.path + "\\" + file.name, {recursive: true});
+    const childFiles = await File.find({owner: user._id});
+    childFiles?.forEach(async childFile => {
+        if(childFile.path.includes(file.path + '\\' + file.name)){
+            const endPart = childFile.path.substring((file.path + '\\' + file.name).length + 1);
+            let newPath = file.path + '\\' + name;
+            if(endPart.length)
+                newPath += "\\" + endPart;
+            childFile.path = newPath;
+            await childFile.save();
+        }
+    });
+    file.name = name;
+    await file.save();
+}
+
 class Controller {
     // /api/file/ 'POST'
     async createDir(req, res){
@@ -132,6 +151,7 @@ class Controller {
             recursiveSizeSave(file.size, parent);
             return res.json({file: fileDB, user});
         } catch (error) {
+            console.log(error);
             return res.status(500).json({message: 'Upload error.'});
         }
     }
@@ -203,22 +223,7 @@ class Controller {
                 return res.status(400).json({message: 'File was not found.'});
             if(fs.existsSync(file.path + '\\' + name))
                 return res.status(400).json({message: 'This name is already exists.'});
-            fs.mkdirSync(file.path + "\\" + name, {recursive: true}, e => console.log(e));
-            recursiveDir(file.path + '\\' + file.name, file.path + '\\' + name);
-            fs.rmdirSync(file.path + "\\" + file.name, {recursive: true});
-            const childFiles = await File.find({owner: user._id});
-            childFiles?.forEach(async childFile => {
-                if(childFile.path.includes(file.path + '\\' + file.name)){
-                    const endPart = childFile.path.substring((file.path + '\\' + file.name).length + 1);
-                    let newPath = file.path + '\\' + name;
-                    if(endPart.length)
-                        newPath += "\\" + endPart;
-                    childFile.path = newPath;
-                    await childFile.save();
-                }
-            })
-            file.name = name;
-            await file.save();
+            await transferToNewDir(file, name, user);
             return res.json({file});
         } catch (error) {
             return res.status(500).json({message: 'Rename error.'});

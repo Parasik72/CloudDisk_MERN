@@ -50,14 +50,16 @@ export const Files = () => {
     const dropHandler = e => {
         e.stopPropagation();
         e.preventDefault();
-        const uploadFilesArr = [];
-        for (const iterator of e.dataTransfer.files) {
-            const upFile = { _id: Date.now() + Math.random(), date: Date.now(), name: iterator.name, size: iterator.size, progress: 0, currentDir };
-            dispatch(addUploadFile(upFile));
-            uploadFilesArr.push(upFile);
+        if(e.dataTransfer?.files?.length){
+            const uploadFilesArr = [];
+            for (const iterator of e.dataTransfer.files) {
+                const upFile = { _id: Date.now() + Math.random(), date: Date.now(), name: iterator.name, size: iterator.size, progress: 0, currentDir };
+                dispatch(addUploadFile(upFile));
+                uploadFilesArr.push(upFile);
+            }
+            dispatch(upload([...e.dataTransfer.files], currentDir, uploadFilesArr));
+            setDrag(false);
         }
-        dispatch(upload([...e.dataTransfer.files], currentDir, uploadFilesArr));
-        setDrag(false);
     }
     const sortHandler = (name) => {
         if(sortBy === name)

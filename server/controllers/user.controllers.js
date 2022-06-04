@@ -4,13 +4,27 @@ const path = require('path');
 const config = require('config');
 const {validationResult} = require('express-validator');
 
+const imgTypes = [
+    'png',
+    'jpeg',
+    'jpg',
+]
+
 class Controller {
     // /api/user/avatar 'POST'
     async avatar(req, res){
         try {
             const {file} = req.files;
             if(!file)
-                return res.status(400).json({message: 'File error.'})
+                return res.status(400).json({message: 'File error.'});
+            const fileType = file.name.split('.').pop();
+            let bCorrectTypeImg = false;
+            imgTypes.forEach(type => {
+                if(type === fileType)
+                    bCorrectTypeImg = true;
+            });
+            if(!bCorrectTypeImg)
+                return res.status(400).json({message: 'Incorrect image type.'})
             const user = await User.findById(req.user.id);
             if(!user)
                 return res.status(401).json({message: 'No authorization.'});

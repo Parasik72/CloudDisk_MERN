@@ -8,15 +8,10 @@ import { useUser } from '../../actions/user';
 import { PopUpUsername } from './PopUpUsername/PopUpUsername';
 import { PopUpEmail } from './PopUpEmail/PopUpEmail';
 import { PopUpClean } from './PopUpClean/PopUpClean';
-
-function fileSize(size) {
-    if(size === 0)
-        return '0 B'
-    var i = Math.floor( Math.log(size) / Math.log(1024) );
-    return ( size / Math.pow(1024, i) ).toFixed(2) * 1 + ' ' + ['B', 'kB', 'MB', 'GB', 'TB'][i];
-};
+import { useFileInfo } from '../../hooks/fileInfo.hooks';
 
 export const Profile = () => {
+    const {fileSize} = useFileInfo();
     const [popUpDisplayUsername, setPopUpDisplayUsername] = useState(false);
     const [popUpDisplayEmail, setPopUpDisplayEmail] = useState(false);
     const [popUpDisplayClean, setPopUpDisplayClean] = useState(false);
@@ -39,7 +34,7 @@ export const Profile = () => {
                 <div className={styles.profile__avatar} onClick={() => document.getElementById('changeAvatar').click()}>
                     <img width={100} height={100} className={styles.profile__avatar_changeImg} src={ChangeAvatar} alt="ChangeAvatar" />
                     <img width={100} height={100} src={avatar} alt="Avatar" />
-                    <input onChange={changeHandler} type="file" id="changeAvatar" accept="image/*" />
+                    <input onChange={changeHandler} type="file" id="changeAvatar" accept=".png, .jpg, .jpeg" />
                 </div>
                 <div className={styles.profile__info}>
                     <div className={styles.profile__info__item}>

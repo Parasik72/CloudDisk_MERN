@@ -10,7 +10,10 @@ router.post('/registration',[
     check('email', 'Incorrect email').isEmail(),
     check('password', 'Password symbols length: min is 6, max is 25').isLength({min: 6, max: 25})
 ], Controller.registration);
-router.post('/login', Controller.login);
+router.post('/login',[
+    check('email', 'Incorrect data').isEmail(),
+    check('password', 'Incorrect data').isLength({min: 6, max: 25})
+], Controller.login);
 
 // /api/auth 'GET'
 router.get('/', authMiddleware, Controller.auth);
